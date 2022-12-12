@@ -1,7 +1,9 @@
 import Head from "next/head";
+import Layouts from "../Components/Layouts";
 
 export default function Home() {
   return (
+    <Layouts>
       <div>
         <Head>
           <title>FUDO</title>
@@ -10,9 +12,10 @@ export default function Home() {
         </Head>
         {/* body */}
         <main>
-          <h1>Subscribe Zainkeepscode</h1>        
+          <h1>Subscribe Zainkeepscode</h1>
         </main>
       </div>
+    </Layouts>
   );
 }
 
