@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Hero from "../Components/Hero";
 import Layouts from "../Components/Layouts";
+import Menu from "../Components/Menu";
 import Services from "../Components/Services";
 import { client } from "../lib/client";
 import css from '../styles/Home.module.css'
@@ -18,6 +19,7 @@ export default function Home(pizzas) {
         <main>
           <Hero />
           <Services />
+          <Menu pizzas={pizzas}/>
         </main>
       </div>
     </Layouts>
