@@ -2,10 +2,18 @@ import Image from "next/image";
 import Layouts from "../../Components/Layouts";
 import { urlFor } from "../../lib/client";
 import { useStore } from "../../Store/store";
+import toast, {Toaster} from 'react-hot-toast'
 import css from '../../styles/Cart.module.css'
 export default function Cart() {
 
     const CartData = useStore(state => state.cart)
+    const removePizza = useStore(state => state.removePizza)
+    const handleRemoving = (i) => {
+        removePizza(i)
+        toast.error('Item Remove')
+    }
+
+    const total = () => CartData.pizzas.reduce((a, b) => a+b.quantity * b.price , 0)
     return (
         <Layouts>
             <div className={css.container}>
@@ -28,9 +36,10 @@ export default function Cart() {
                                     const src = urlFor(pizza.image).url()
                                     return (
                                         <tr key={i}>
-                                            <td>
+                                            <td 
+                                             className={css.imageTd}
+                                            >
                                                 <Image
-                                                className={css.imageTd}
                                                     loader={() => src}
                                                     src={src}
                                                     alt=''
@@ -60,6 +69,13 @@ export default function Cart() {
                                             <td>
                                                 {pizza.price * pizza.quantity}
                                             </td>
+                                            <td
+                                            style={{
+                                                color:'var(--themeRed)',
+                                                cursor:'pointer'
+                                            }}
+                                            onClick={() => handleRemoving(i)}
+                                            >x</td>
                                         </tr>
                                     )
                                 })
@@ -69,8 +85,23 @@ export default function Cart() {
                 </div>
                 {/* Cart */}
                 <div className={css.cart}>
-
+                    <span>Cart</span>
+                    <div className={css.CartDetails}>
+                            <div>
+                                <span>Items</span>
+                                <span>{CartData.pizzas.length}</span>
+                            </div>
+                            <div>
+                                <span>Total</span>
+                                <span>${total()}</span>
+                            </div>
+                    </div>
+                    <div className={css.buttons}>
+                            <button className="btn">Pay on Delivery</button>
+                            <button className="btn">Pay Now</button>
+                    </div>
                 </div>
+                <Toaster />
             </div>
         </Layouts>
     )
