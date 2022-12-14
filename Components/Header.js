@@ -6,8 +6,6 @@ import { UilShoppingBag } from '@iconscout/react-unicons'
 import { useStore } from '../Store/store';
 import Link from 'next/link';
 const Header = () => {
-    const state = useStore(state => state);
-    console.log(state);
     const items = useStore((state) => state.cart.pizzas.length)
     return (
         <div className={css.header}>
@@ -18,7 +16,7 @@ const Header = () => {
             </div>
             {/* Menu Side  */}
             <ul className={css.menu}>
-                <li>Home</li>
+                <Link href={'/'}>Home</Link>
                 <li>Menu</li>
                 <li>Contact</li>
             </ul>
