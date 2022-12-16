@@ -6,8 +6,14 @@ import toast, {Toaster} from 'react-hot-toast'
 import css from '../../styles/Cart.module.css'
 import { useState } from "react";
 import OrderModal from "../../Components/OrderModal";
+import { useRouter } from "next/router";
+
 export default function Cart() {
     const [paymentMethod , setPaymentMethod] = useState(null)
+    const router = useRouter();
+    const [order , setOrder] = useState(
+        typeof window !== 'undefined' && localStorage.getItem('order')
+    )
     const CartData = useStore(state => state.cart)
     const removePizza = useStore(state => state.removePizza)
     const handleRemoving = (i) => {
@@ -22,9 +28,30 @@ export default function Cart() {
         typeof window !== 'undefined' && localStorage.setItem('total' , total())
     }
 
+    const handleCheckout = async () => {
+        typeof window !== 'undefined' && localStorage.setItem('total' , total())
+        setPaymentMethod(1);
+        const response = await fetch('/api/stripe' , {
+            method:'POST' ,
+            headers: {
+                'content-type' : 'application/json'
+            },
+            body: JSON.stringify(CartData.pizzas)
+        });
+
+        if(response.status === 500) return;
+        const data = await response.json();
+        toast.loading('Redirecting....');
+        router.push(data.url)
+    }
+
     return (
         <Layouts>
-            <div className={css.container}>
+            {
+                CartData.pizzas.length === 0 ? 
+                <span className={css.pizzas}>Please Order a pizzas</span>
+                :
+                <div className={css.container}>
                 {/* Details  */}
                 <div className={css.details}>
                     <table className={css.table}>
@@ -104,13 +131,21 @@ export default function Cart() {
                                 <span>${total()}</span>
                             </div>
                     </div>
-                    <div className={css.buttons}>
+
+                    {
+                        !order && CartData.pizzas.length > 0 ? (
+                            <div className={css.buttons}>
                             <button className="btn" onClick={handleOnDelivery}>Pay on Delivery</button>
-                            <button className="btn">Pay Now</button>
+                            <button className="btn" onClick={handleCheckout}>Pay Now</button>
                     </div>
+                        ) :
+                        <p className={css.cartBtn}>All ready order one item</p>
+                    }
+                    
                 </div>
                 <Toaster />
             </div>
+            }
             {/* Modal */}
             <OrderModal 
             opened = {paymentMethod === 0}

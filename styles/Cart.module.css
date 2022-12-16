@@ -69,3 +69,22 @@
     border: 2px solid var(--themeRed);
 }
 
+
+.pizzas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--themeRed);
+}
+
+
+.cartBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--themeRed);
+    font-weight: bold;
+}
